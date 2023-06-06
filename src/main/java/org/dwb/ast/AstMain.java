@@ -12,7 +12,7 @@ import java.io.*;
  * Input:按行读取输入文件
  * Output:输出格式化抽象语法树到对应文件
  */
-public class MidlGrammarToAst{
+public class AstMain {
     private static final String inputFileName = "input.txt";
     private static final String outputFileName = "output.txt";
     public static void main(String[] args) throws Exception {
@@ -39,7 +39,7 @@ public class MidlGrammarToAst{
             CommonTokenStream tokens = new CommonTokenStream(lexer);
             MidlGrammarParser parser = new MidlGrammarParser(tokens);
             ParseTree tree = parser.specification();
-            ASTFormat ag = new ASTFormat();
+            AstTranslator ag = new AstTranslator();
             ag.visit(tree);
 
             System.out.println("Case " + cnt++ + "\'s ASTParseTree: " + ag.astParseTree);

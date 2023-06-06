@@ -1,9 +1,7 @@
-package org.dwb.precheck;
+package org.dwb.semantic_check;
 
 import org.dwb.antlr.MidlGrammarParser;
 import org.dwb.antlr.MidlGrammarBaseVisitor;
-import org.dwb.symtab.SymNode;
-import org.dwb.symtab.SymTab;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -15,7 +13,7 @@ import java.util.Objects;
 public class MeanCheck extends MidlGrammarBaseVisitor<String> {
 
     //符号表相关
-    public SymTab st = new SymTab();
+    public ParamTable st = new ParamTable();
     public ErrorRecorder er = new ErrorRecorder();
     //错误类型
     public static final int redefined = 0;
@@ -27,9 +25,9 @@ public class MeanCheck extends MidlGrammarBaseVisitor<String> {
     public ArrayList<String> tempModule=new ArrayList<String>();
     public ArrayList<String> tempStruct=new ArrayList<String>();
     //当前有属性等待赋值的节点
-    public SymNode tempNode = new SymNode();
+    public ParamNode tempNode = new ParamNode();
     public String lastStruct = "";
-    public ArrayList<SymNode> tempNodes=new ArrayList<SymNode>();
+    public ArrayList<ParamNode> tempNodes=new ArrayList<ParamNode>();
     //当前正负号
     public boolean isPos = true;
     //是否舍弃当前节点
@@ -122,14 +120,14 @@ public class MeanCheck extends MidlGrammarBaseVisitor<String> {
     public String visitModule(MidlGrammarParser.@NotNull ModuleContext ctx) {
 
         //新建符号表元素节点
-        SymNode sn=new SymNode();
+        ParamNode sn=new ParamNode();
         sn.setName(ctx.getChild(1).getText());
         sn.setType("module");
         if(tempModule.size()>0)
             sn.setModuleName(tempModule.toString());
 
         //检查是否存在相同的节点申明
-        SymNode result = st.lookupSt(sn);
+        ParamNode result = st.lookupSt(sn);
         //若不存在则插入
         if(result==null){
             st.insertST(sn);
@@ -163,7 +161,7 @@ public class MeanCheck extends MidlGrammarBaseVisitor<String> {
         //"struct" ID
         else {
             //新建符号表元素节点
-            SymNode sn = new SymNode();
+            ParamNode sn = new ParamNode();
             sn.setName(ctx.getChild(1).getText());
             sn.setType("struct");
 
@@ -171,7 +169,7 @@ public class MeanCheck extends MidlGrammarBaseVisitor<String> {
                 sn.setModuleName(tempModule.toString());
 
             //检查是否存在相同的节点申明
-            SymNode result = st.lookupSt(sn);
+            ParamNode result = st.lookupSt(sn);
             //若不存在则插入
             if(result==null){
                 st.insertST(sn);
@@ -190,7 +188,7 @@ public class MeanCheck extends MidlGrammarBaseVisitor<String> {
     @Override
     public String visitStruct_type(MidlGrammarParser.@NotNull Struct_typeContext ctx) {
 
-        SymNode sn = new SymNode();
+        ParamNode sn = new ParamNode();
         sn.setName(ctx.getChild(1).getText());
         sn.setType("struct");
 
@@ -200,7 +198,7 @@ public class MeanCheck extends MidlGrammarBaseVisitor<String> {
             sn.setModuleName(tempModule.toString());
 
         //检查是否存在相同的节点申明
-        SymNode result = st.lookupSt(sn);
+        ParamNode result = st.lookupSt(sn);
         //若不存在则插入
         if(result==null){
             st.insertST(sn);
@@ -242,7 +240,7 @@ public class MeanCheck extends MidlGrammarBaseVisitor<String> {
                 //删除最后一个
                 lastStruct="";
                 //接收完一种类型,更新
-                tempNode=new SymNode();
+                tempNode=new ParamNode();
             }
 
 
@@ -289,12 +287,12 @@ public class MeanCheck extends MidlGrammarBaseVisitor<String> {
             moduleName = tempModule.toString();
 
         //查询symnode
-        SymNode sn=new SymNode();
+        ParamNode sn=new ParamNode();
         sn.setName(structName);
         sn.setType("struct");
         if(moduleName!=null)
             sn.setModuleName(moduleName);
-        SymNode res = st.lookupSt(sn);
+        ParamNode res = st.lookupSt(sn);
         if(res==null){
 
             er.addError(ctx.getStart().getLine()+":"+ctx.getStart().getCharPositionInLine(),"struct",structName,undefined,null);
@@ -419,7 +417,7 @@ public class MeanCheck extends MidlGrammarBaseVisitor<String> {
     public String visitSimple_declarator(MidlGrammarParser.@NotNull Simple_declaratorContext ctx) {
         //if(abandoned)return null;
 
-        SymNode sn=new SymNode();
+        ParamNode sn=new ParamNode();
         sn.setName(ctx.getChild(0).getText());
         if(tempModule.size()>0)
             sn.setModuleName(tempModule.toString());
@@ -432,7 +430,7 @@ public class MeanCheck extends MidlGrammarBaseVisitor<String> {
             sn.setStructName(tempStruct.toString());
 
         //检查冲突
-        SymNode res=st.lookupSt(sn);
+        ParamNode res=st.lookupSt(sn);
 
         //同struct下不能同名变量
         if(res!=null)
@@ -459,11 +457,11 @@ public class MeanCheck extends MidlGrammarBaseVisitor<String> {
     @Override
     public String visitArray_declarator(MidlGrammarParser.@NotNull Array_declaratorContext ctx) {
         //if(abandoned)return null;
-        SymNode sn=new SymNode();
+        ParamNode sn=new ParamNode();
         sn.setName(ctx.getChild(0).getText());
         sn.setStructName(tempStruct.toString());
         sn.setModuleName(tempModule.toString());
-        SymNode res=st.lookupSt(sn);
+        ParamNode res=st.lookupSt(sn);
 
         //同struct下不能同名变量
         if(res!=null)

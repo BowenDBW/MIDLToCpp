@@ -7,10 +7,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 /**
- *  AST formatter 进行抽象语法树的格式化输出
+ *  AstTranslator 进行抽象语法树的格式化输出
  * 参考：AST的设计PPT
  */
-public class ASTFormat extends MidlGrammarBaseVisitor<String> {
+public class AstTranslator extends MidlGrammarBaseVisitor<String> {
 
     //存储抽象语法树
     public String astParseTree = "";

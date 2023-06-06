@@ -1,10 +1,11 @@
-package org.dwb.backGen;
-import org.dwb.backGen.msgStructure.MemMsg;
-import org.dwb.backGen.msgStructure.ScopedMemMsg;
-import org.dwb.backGen.msgStructure.StructMsg;
-import org.dwb.precheck.PreCheck;
-import org.dwb.symtab.SymNode;
-import org.dwb.symtab.SymTab;
+package org.dwb.cpp_creator;
+import org.dwb.cpp_creator.msg.MemMsg;
+import org.dwb.cpp_creator.msg.ScopedMemMsg;
+import org.dwb.cpp_creator.msg.StructMsg;
+import org.dwb.semantic_check.SemanticCheck;
+import org.dwb.semantic_check.ParamNode;
+import org.dwb.semantic_check.ParamTable;
+import org.jetbrains.annotations.NotNull;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
@@ -23,8 +24,8 @@ import java.util.Map;
  * 整合词法语法语义+生成hxx代码文件
  */
 public class GenHxx {
-    private static final String outputFileName = "./src/main/txt/outputHxx.txt";
-    private static SymTab stable;
+    private static final String outputFileName = "output.hxx";
+    private static ParamTable stable;
     private static ArrayList<StructMsg>structs;
 
     /**
@@ -49,8 +50,8 @@ public class GenHxx {
      */
     public static void catchAllMsg() throws IOException {
         //语义分析
-        PreCheck.preCheck();
-        stable = PreCheck.mc.st;
+        SemanticCheck.preCheck();
+        stable = SemanticCheck.mc.st;
         equalType = new HashMap<>();
         equalType.put("int16", "short");
         equalType.put("int32", "long");
@@ -61,11 +62,11 @@ public class GenHxx {
 
         //收集所有struct
         structs = new ArrayList<StructMsg>();
-        SymNode sn = new SymNode();
+        ParamNode sn = new ParamNode();
         sn.setType("struct");
-        ArrayList<SymNode> allStructs = stable.lookupAll(sn);
+        ArrayList<ParamNode> allStructs = stable.lookupAll(sn);
 
-        for(SymNode snd:allStructs)
+        for(ParamNode snd:allStructs)
         {
             StructMsg smg=new StructMsg();
 
@@ -87,7 +88,7 @@ public class GenHxx {
             }
 
             //找当前的struct节点普通members
-            sn = new SymNode();
+            sn = new ParamNode();
             sn.setStructName("["+snd.getName()+"]");
             sn.setModuleName(snd.getModuleName());
             ArrayList<MemMsg> members = catchMembers(sn);
@@ -97,19 +98,16 @@ public class GenHxx {
             ArrayList<ScopedMemMsg> scopedMembers = catchScopedMembers(sn);
             smg.setScopeMembers(scopedMembers);
             smg.setHasScoped(smg.getScopeMembers().size()>0);
-//            if(smg.getScopeMembers().size()>0)
-//                System.err.println(scopedMembers.get(0).getName()+" "+scopedMembers.get(0).getType());
-
             structs.add(smg);
        }
 
     }
 
-    public static ArrayList<MemMsg> catchMembers(SymNode sn)
+    public static @NotNull ArrayList<MemMsg> catchMembers(ParamNode sn)
     {
-        ArrayList<SymNode> allMembers = stable.lookupAll(sn);
+        ArrayList<ParamNode> allMembers = stable.lookupAll(sn);
         ArrayList<MemMsg> members = new ArrayList<MemMsg>();
-        for(SymNode snd:allMembers)
+        for(ParamNode snd:allMembers)
         {
             //scope
             if(snd.getType().contains("::"))
@@ -162,11 +160,11 @@ public class GenHxx {
 
     }
 
-    public static ArrayList<ScopedMemMsg> catchScopedMembers(SymNode sn)
+    public static @NotNull ArrayList<ScopedMemMsg> catchScopedMembers(ParamNode sn)
     {
-        ArrayList<SymNode> allScopedMembers = stable.lookupAll(sn);
+        ArrayList<ParamNode> allScopedMembers = stable.lookupAll(sn);
         ArrayList<ScopedMemMsg> scopedMembers=new ArrayList<ScopedMemMsg>();
-        for(SymNode snd:allScopedMembers)
+        for(ParamNode snd:allScopedMembers)
         {
             //scope
             if(!snd.getType().contains("::"))
@@ -191,7 +189,7 @@ public class GenHxx {
             scpMember.setType(moduleName + structName);
             scpMember.setName(snd.getName());
 
-            SymNode dad = new SymNode();
+            ParamNode dad = new ParamNode();
             dad.setModuleName(module1.get(0));
             dad.setStructName("["+structName+"]");
             ArrayList<MemMsg> members = catchMembers(dad);
@@ -203,17 +201,17 @@ public class GenHxx {
         return scopedMembers;
     }
 
-
-
     public static void main(String[] args) throws IOException {
         //得到所有
         catchAllMsg();
 
         File outputFile = new File(outputFileName);
 
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile));
+        BufferedWriter bufferedWriter =
+                new BufferedWriter(new FileWriter(outputFile));
         String result = "";
-        STGroup stg = new STGroupFile("T:\\learning\\CS\\complieEx\\exp1\\src\\main\\java\\backGen\\hxxTemplate.stg");
+        STGroup stg =
+                new STGroupFile("/home/bowen/Code/IDEA_PROJECT/MIDLToCpp/src/main/java/org/dwb/backGen/hxxTemplate.stg");
         //header
         ST hxxST = stg.getInstanceOf("headerTemplate");
         hxxST.add("fileName", "hxx");

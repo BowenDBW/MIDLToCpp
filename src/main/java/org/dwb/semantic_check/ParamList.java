@@ -1,41 +1,38 @@
-package org.dwb.symtab;
+package org.dwb.semantic_check;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
 /**
  * 符号表中的元素链
  */
-public class SymList {
-    public SymNode head;
-    public SymList()
+public class ParamList {
+    public ParamNode head;
+    public ParamList()
     {
-        head = new SymNode();
+        head = new ParamNode();
     }
 
     /**
      * 头插
-     * @param sn
      */
-    public void insertNode(SymNode sn)
+    public void insertNode(@NotNull ParamNode sn)
     {
         sn.setNext(head.getNext());
         head.setNext(sn);
     }
 
-    public SymNode getHead()
+    public ParamNode getHead()
     {
         return head;
     }
 
     /**
      * tofind中非null的值进行匹配
-     *
-     * @param toFind
-     * @return
      */
-    public SymNode findNode(SymNode toFind)
+    public ParamNode findNode(ParamNode toFind)
     {
-        SymNode tp = head;
+        ParamNode tp = head;
         while((tp=tp.getNext())!=null){
             //tp = tp.getNext();
             if(toFind.getName()!=null && !(toFind.getName().equals(tp.getName()))){
@@ -60,15 +57,12 @@ public class SymList {
 
     /**
      * tofind中非null的值进行匹配所有的
-     *
-     * @param toFind
-     * @return
      */
-    public ArrayList<SymNode> findNodes(SymNode toFind)
+    public ArrayList<ParamNode> findNodes(ParamNode toFind)
     {
-        ArrayList<SymNode> ans = new ArrayList<SymNode>();
+        ArrayList<ParamNode> ans = new ArrayList<ParamNode>();
 
-        SymNode tp = head;
+        ParamNode tp = head;
         while((tp=tp.getNext())!=null){
             //tp = tp.getNext();
             if(toFind.getName()!=null && !(toFind.getName().equals(tp.getName()))){
@@ -95,7 +89,7 @@ public class SymList {
     @Override
     public String toString()
     {
-        SymNode tp = head.getNext();
+        ParamNode tp = head.getNext();
         String nodes="";
         while(tp!=null){
             nodes += tp.toString()+"\n";

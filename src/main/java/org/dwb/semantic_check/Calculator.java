@@ -1,4 +1,4 @@
-package org.dwb.precheck;
+package org.dwb.semantic_check;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.ArrayList;

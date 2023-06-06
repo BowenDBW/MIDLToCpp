@@ -1,24 +1,25 @@
-package org.dwb.symtab;
+package org.dwb.semantic_check;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
  * 符号表
  */
-public class SymTab{
+public class ParamTable {
     public static final int SIZE = 211;
     public static final int SHIFT = 4;
-    public SymList[] symTable;
+    public ParamList[] symTable;
         /**
      * 输入字符串,输出哈希值
      * @param key
      * @return hashcode
      */
-    public static int hash(String key)
+    public static int hash(@NotNull String key)
     {
         int hashCode = 0;
         for(int i = 0;i < key.length();i++)
@@ -28,23 +29,23 @@ public class SymTab{
         return hashCode;
     }
 
-    public SymTab()
+    public ParamTable()
     {
-        symTable = new SymList[SIZE];
+        symTable = new ParamList[SIZE];
     }
 
     /**
      * 属性信息插入符号表
      */
-    public void insertST(SymNode sn)
+    public void insertST(@NotNull ParamNode sn)
     {
         int hashCode = hash(sn.getName());
-        SymList sl = symTable[hashCode];
+        ParamList sl = symTable[hashCode];
 
         //该位置还没链表
         if(sl==null)
         {
-            sl = new SymList();
+            sl = new ParamList();
             sl.insertNode(sn);
         }
         else
@@ -54,10 +55,10 @@ public class SymTab{
         symTable[hashCode] = sl;
     }
     //符合要求的节点,带姓名
-    public SymNode lookupSt(SymNode sn)
+    public ParamNode lookupSt(@NotNull ParamNode sn)
     {
         int hashCode = hash(sn.getName());
-        SymList sl = symTable[hashCode];
+        ParamList sl = symTable[hashCode];
         if(sl==null)
         {
             return null;
@@ -69,13 +70,13 @@ public class SymTab{
     }
 
     //任意符合要求的节点
-    public ArrayList<SymNode> lookupAll(SymNode sn)
+    public ArrayList<ParamNode> lookupAll(ParamNode sn)
     {
-        ArrayList<SymNode> ans = new ArrayList<SymNode>();
-        SymList sl;
+        ArrayList<ParamNode> ans = new ArrayList<ParamNode>();
+        ParamList sl;
         for(int i = 0;i < SIZE;i++)
         {
-            ArrayList<SymNode> tp;
+            ArrayList<ParamNode> tp;
             sl = symTable[i];
             if(sl!=null){
                 tp = sl.findNodes(sn);

@@ -1,4 +1,4 @@
-package org.dwb.backGen.msgStructure;
+package org.dwb.cpp_creator.msg;
 
 import org.jetbrains.annotations.NotNull;
 

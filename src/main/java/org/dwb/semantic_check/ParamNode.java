@@ -1,18 +1,18 @@
-package org.dwb.symtab;
+package org.dwb.semantic_check;
 
 /**
  * 符号表中的元素
  */
-public class SymNode{
+public class ParamNode {
 
     private String name;
     private String type;
     private String moduleName;
     private String structName;
     private String val;
-    private SymNode next;
+    private ParamNode next;
 
-    public SymNode()
+    public ParamNode()
     {
         this.name =null;
         this.type = null;
@@ -22,7 +22,7 @@ public class SymNode{
         this.next = null;
     }
 
-    public SymNode(String name, String type, String moduleName, String structName, String val) {
+    public ParamNode(String name, String type, String moduleName, String structName, String val) {
         this.name = name;
         this.type = type;
         this.moduleName = moduleName;
@@ -57,7 +57,7 @@ public class SymNode{
         return structName;
     }
 
-    public SymNode getNext() {
+    public ParamNode getNext() {
         return next;
     }
 
@@ -81,7 +81,7 @@ public class SymNode{
         this.val = val;
     }
 
-    public void setNext(SymNode next) {
+    public void setNext(ParamNode next) {
         this.next = next;
     }
 }

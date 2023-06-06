@@ -1,4 +1,4 @@
-package org.dwb.precheck;
+package org.dwb.semantic_check;
 
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
@@ -13,7 +13,7 @@ import java.io.*;
  * 整合前端
  * 词法-语法-语义
  */
-public class PreCheck {
+public class SemanticCheck {
     private static final String inputFileName = "inputLines.txt";
 
     public static MeanCheck mc;
@@ -36,16 +36,16 @@ public class PreCheck {
         MidlGrammarParser parser = new MidlGrammarParser(tokens);
         ParseTree tree = parser.specification();
         //遍历分析树-语义检查
-        System.out.println("Sym-Check Process...");
+        System.out.println("Semantic Check Processing...");
         mc = new MeanCheck();
         mc.visit(tree);
-        System.out.println("Sym-Check Finished.");
+        System.out.println("Semantic Check Finished.");
         //打印错误信息
         System.err.println("Errors TraceBack: ");
         System.err.println(mc.er.getErrors());
 
         //打印符号表
-        System.out.println("Print SymTable: ");
+        System.out.println("Found Errors: ");
         System.out.println(mc.st.toString());
 
         bufferedReader.close();
