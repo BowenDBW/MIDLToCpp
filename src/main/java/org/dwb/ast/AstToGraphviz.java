@@ -128,7 +128,7 @@ public class AstToGraphviz {
     private void genGraphs(String outputPath, String dotDir) {
         ArrayList<String> files = getAllFiles(dotDir);
         for (String file : files) {
-            System.out.println(file);
+            System.out.println("generating: " + file);
             try (InputStream dot = new FileInputStream(file)) {
                 MutableGraph g = new Parser().read(dot);
                 String serial = file.split("SyntaxOut")[1].split("\\.")[0];
