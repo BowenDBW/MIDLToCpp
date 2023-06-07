@@ -42,9 +42,8 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
      */
     @Override
     public String visitModule(MidlGrammarParser.@NotNull ModuleContext ctx) {
-        System.out.println("LINE:" + ctx.getStart().getLine());  //check
         astParseTree += "module( ";
-        astParseTree += "ID:" + ctx.getChild(1).getText()+" ";
+        astParseTree += "ID：" + ctx.getChild(1).getText()+" ";
         //不visit两边的大括号了
         for(int i = 3;i < ctx.getChildCount()-1;i++) {
             visit(ctx.getChild(i));
@@ -65,7 +64,7 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
         //"struct" ID
         else {
             astParseTree +="struct( ";
-            astParseTree +="ID:"+ctx.ID().getText()+" ";
+            astParseTree +="ID："+ctx.ID().getText()+" ";
             astParseTree +=" ) ";
         }
         return null;
@@ -77,7 +76,7 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
     @Override
     public String visitStruct_type(MidlGrammarParser.@NotNull Struct_typeContext ctx) {
         astParseTree +="struct( ";
-        astParseTree +="ID:"+ctx.getChild(1).getText()+" ";
+        astParseTree +="ID："+ctx.getChild(1).getText()+" ";
         visit(ctx.getChild(3));
         astParseTree +=" ) ";
         return null;
@@ -226,11 +225,11 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
 
         if (ctx.getChildCount() != 1) {
             astParseTree += "=( ";
-            astParseTree += "ID:" + ctx.getChild(0).getText()+" ";
+            astParseTree += "ID：" + ctx.getChild(0).getText()+" ";
             visit(ctx.or_expr());
             astParseTree += " ) ";
         }
-        else astParseTree += "ID:" + ctx.getChild(0).getText()+" ";
+        else astParseTree += "ID：" + ctx.getChild(0).getText()+" ";
         return null;
     }
 

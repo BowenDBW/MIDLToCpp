@@ -1,0 +1,62 @@
+graph{
+    { rank=same; "specification@0"}
+    { rank=same; "module@1"}
+    { rank=same; "ID：a@2"; "struct@3"}
+    { rank=same; "ID：c@4"; "member@5"; "member@13"; "member@21"}
+    { rank=same; "namespace@6"; "=@10"; "int64@14"; "array@15"; "unsigned@22"; "long@23"; "long@24"; "=@25"}
+    { rank=same; "std@7"; "space1@8"; "space2@9"; "ID：b@11"; "1@12"; "ID:d@16"; "10@17"; "arrayValues@18"; "ID：ans@26"; "|@27"}
+    { rank=same; "1@19"; "2@20"; "1@28"; "^@29"}
+    { rank=same; "2@30"; "&@31"}
+    { rank=same; "3@32"; ">>@33"}
+    { rank=same; "4@34"; "+@35"}
+    { rank=same; "5@36"; "*@37"}
+    { rank=same; "6@38"; "/@39"}
+    { rank=same; "7@40"; "%@41"}
+    { rank=same; "8@42"; "~@43"}
+    { rank=same; "9@44"}
+
+    "module@1" -- "specification@0"
+    "ID：a@2" -- "module@1"
+    "struct@3" -- "module@1"
+    "ID：c@4" -- "struct@3"
+    "member@5" -- "struct@3"
+    "namespace@6" -- "member@5"
+    "std@7" -- "namespace@6"
+    "space1@8" -- "namespace@6"
+    "space2@9" -- "namespace@6"
+    "=@10" -- "member@5"
+    "ID：b@11" -- "=@10"
+    "1@12" -- "=@10"
+    "member@13" -- "struct@3"
+    "int64@14" -- "member@13"
+    "array@15" -- "member@13"
+    "ID:d@16" -- "array@15"
+    "10@17" -- "array@15"
+    "arrayValues@18" -- "array@15"
+    "1@19" -- "arrayValues@18"
+    "2@20" -- "arrayValues@18"
+    "member@21" -- "struct@3"
+    "unsigned@22" -- "member@21"
+    "long@23" -- "member@21"
+    "long@24" -- "member@21"
+    "=@25" -- "member@21"
+    "ID：ans@26" -- "=@25"
+    "|@27" -- "=@25"
+    "1@28" -- "|@27"
+    "^@29" -- "|@27"
+    "2@30" -- "^@29"
+    "&@31" -- "^@29"
+    "3@32" -- "&@31"
+    ">>@33" -- "&@31"
+    "4@34" -- ">>@33"
+    "+@35" -- ">>@33"
+    "5@36" -- "+@35"
+    "*@37" -- "+@35"
+    "6@38" -- "*@37"
+    "/@39" -- "*@37"
+    "7@40" -- "/@39"
+    "%@41" -- "/@39"
+    "8@42" -- "%@41"
+    "~@43" -- "%@41"
+    "9@44" -- "~@43"
+}

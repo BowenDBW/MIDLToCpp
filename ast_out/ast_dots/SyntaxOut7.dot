@@ -1,0 +1,20 @@
+graph{
+    { rank=same; "specification@0"}
+    { rank=same; "struct@1"}
+    { rank=same; "ID：a@2"; "member@3"; "member@6"; "member@9"}
+    { rank=same; "char@4"; "ID：b@5"; "int64@7"; "ID：c@8"; "struct@10"; "ID：id@12"}
+    { rank=same; "ID：type@11"}
+
+    "struct@1" -- "specification@0"
+    "ID：a@2" -- "struct@1"
+    "member@3" -- "struct@1"
+    "char@4" -- "member@3"
+    "ID：b@5" -- "member@3"
+    "member@6" -- "struct@1"
+    "int64@7" -- "member@6"
+    "ID：c@8" -- "member@6"
+    "member@9" -- "struct@1"
+    "struct@10" -- "member@9"
+    "ID：type@11" -- "struct@10"
+    "ID：id@12" -- "member@9"
+}

@@ -1,0 +1,31 @@
+graph{
+    { rank=same; "specification@0"}
+    { rank=same; "struct@1"}
+    { rank=same; "ID：a@2"; "member@3"; "member@6"; "member@9"; "member@13"; "member@16"; "member@19"; "member@22"}
+    { rank=same; "long@4"; "ID：b@5"; "int32@7"; "ID：c@8"; "long@10"; "long@11"; "ID：d@12"; "int64@14"; "ID：e@15"; "int8@17"; "ID：f@18"; "short@20"; "ID：g@21"; "int16@23"; "ID：h@24"}
+
+    "struct@1" -- "specification@0"
+    "ID：a@2" -- "struct@1"
+    "member@3" -- "struct@1"
+    "long@4" -- "member@3"
+    "ID：b@5" -- "member@3"
+    "member@6" -- "struct@1"
+    "int32@7" -- "member@6"
+    "ID：c@8" -- "member@6"
+    "member@9" -- "struct@1"
+    "long@10" -- "member@9"
+    "long@11" -- "member@9"
+    "ID：d@12" -- "member@9"
+    "member@13" -- "struct@1"
+    "int64@14" -- "member@13"
+    "ID：e@15" -- "member@13"
+    "member@16" -- "struct@1"
+    "int8@17" -- "member@16"
+    "ID：f@18" -- "member@16"
+    "member@19" -- "struct@1"
+    "short@20" -- "member@19"
+    "ID：g@21" -- "member@19"
+    "member@22" -- "struct@1"
+    "int16@23" -- "member@22"
+    "ID：h@24" -- "member@22"
+}

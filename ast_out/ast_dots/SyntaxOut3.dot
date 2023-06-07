@@ -1,0 +1,11 @@
+graph{
+    { rank=same; "specification@0"}
+    { rank=same; "module@1"}
+    { rank=same; "ID：a@2"; "struct@3"}
+    { rank=same; "ID：b@4"}
+
+    "module@1" -- "specification@0"
+    "ID：a@2" -- "module@1"
+    "struct@3" -- "module@1"
+    "ID：b@4" -- "struct@3"
+}

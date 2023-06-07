@@ -13,8 +13,8 @@ import java.io.*;
  * Output:输出格式化抽象语法树到对应文件
  */
 public class AstMain {
-    private static final String inputFileName = "input.txt";
-    private static final String outputFileName = "output.txt";
+    private static final String inputFileName = "multi_midl.txt";
+    private static final String outputFileName = "middle.txt";
     public static void main(String[] args) throws Exception {
         File inputFile = new File(inputFileName);
         if(inputFile.exists() && inputFile.isFile()) {
@@ -30,9 +30,7 @@ public class AstMain {
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile));
 
         String line;
-        int cnt = 1;
         while((line = bufferedReader.readLine()) != null) {
-            System.out.println("Case " + cnt + ": " + line);
 
             CharStream input = CharStreams.fromString(line);
             MidlGrammarLexer lexer = new MidlGrammarLexer(input);
@@ -42,13 +40,12 @@ public class AstMain {
             AstTranslator ag = new AstTranslator();
             ag.visit(tree);
 
-            System.out.println("Case " + cnt++ + "\'s ASTParseTree: " + ag.astParseTree);
-            System.out.println("----------------------------------------");
-
             bufferedWriter.write(ag.astParseTree + "\n");
             bufferedWriter.flush();
         }
         bufferedReader.close();
         bufferedWriter.close();
+
+        new AstToGraphviz().visualize(outputFileName, "ast_out");
     }
 }
