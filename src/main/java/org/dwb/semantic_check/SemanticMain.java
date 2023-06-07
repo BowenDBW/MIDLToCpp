@@ -18,16 +18,17 @@ import java.io.IOException;
 public class SemanticMain {
     private static final String inputFileName = "midl.txt";
 
-    public static SemanticCheck mc;
+    public static SemanticCheck semanticCheck;
 
     public static void preCheck() throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFileName));
+        BufferedReader bufferedReader =
+                new BufferedReader(new FileReader(inputFileName));
         StringBuilder codes = new StringBuilder();
         String line;
         int cnt = 1;
         while ((line = bufferedReader.readLine()) != null) {
-            System.out.printf("[%03d]: %s", cnt, line);
-            System.out.println();
+            //System.out.printf("[%03d]: %s", cnt, line);
+            //System.out.println();
             codes.append(line).append("\n");
             cnt++;
         }
@@ -39,17 +40,20 @@ public class SemanticMain {
         MidlGrammarParser parser = new MidlGrammarParser(tokens);
         ParseTree tree = parser.specification();
         //遍历分析树-语义检查
-        System.out.println("Semantic Check Processing...");
-        mc = new SemanticCheck();
-        mc.visit(tree);
-        System.out.println("Semantic Check Finished.");
+        //System.out.println("Semantic Check Processing...");
+        semanticCheck = new SemanticCheck();
+        semanticCheck.visit(tree);
+        //System.out.println("Semantic Check Finished.");
         //打印错误信息
-        System.err.println("Errors TraceBack: ");
-        System.err.println(mc.er.getErrors());
-
+        if(semanticCheck.er.getErrors().equals("")){
+            System.out.println("Exit With Code 0");
+        }else {
+            System.err.println("Errors TraceBack: ");
+            System.err.println(semanticCheck.er.getErrors());
+        }
         //打印符号表
-        System.out.println("Found Errors: ");
-        System.out.println(mc.st.toString());
+        //System.out.println("Found Errors: ");
+        //System.out.println(semanticCheck.st.toString());
 
         bufferedReader.close();
     }

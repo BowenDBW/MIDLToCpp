@@ -29,15 +29,6 @@ public class ParamTable {
         return hashCode;
     }
 
-    public static void main(String[] args) throws IOException {
-        BufferedReader bf = new BufferedReader(new InputStreamReader(System.in));
-        String line;
-        while ((line = bf.readLine()) != null) {
-            int value = hash(line);
-            System.out.println(value);
-        }
-    }
-
     /**
      * 属性信息插入符号表
      */

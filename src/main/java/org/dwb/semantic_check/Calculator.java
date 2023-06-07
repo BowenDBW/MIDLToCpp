@@ -5,38 +5,32 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 计算字符串算式子(右端开始计算)
- * 待处理运算符正、负号
+ *
  */
 public class Calculator {
-    public static ArrayList<String> exps = new ArrayList<String>();
-    ;
-    public static ArrayList<String> nums = new ArrayList<String>();
-    ;
+    public static ArrayList<String> exps = new ArrayList<>();
+    public static ArrayList<String> nums = new ArrayList<>();
 
     /**
      * 用于检测integer溢出
-     *
-     * @param numss
-     * @return
      */
     static boolean checkOverFlow(String numss, boolean isPos) {
-        String up = "32767";
-        String down = "32768";
+        String maximum = "32767";
+        String minimum = "32768";
         if (isPos) {
-            return !(numss.length() <= 5 && (numss.length() != 5 || (numss.compareTo(up) <= 0)));
+            return !(numss.length() <= 5 && (numss.length() != 5 || (numss.compareTo(maximum) <= 0)));
         } else {
-            return !(numss.length() <= 5 && (numss.length() != 5 || (numss.compareTo(down) <= 0)));
+            return !(numss.length() <= 5 && (numss.length() != 5 || (numss.compareTo(minimum) <= 0)));
         }
     }
 
-
+    /**
+     * 预处理
+     */
     public static void preProcess(String inputs) {
-
         //初始化nums栈
         exps.clear();
         nums.clear();
-
         String REPLACE = " ";
         String EXPREGEX = "\\*|\\+|-|/|%|<<|>>|&|\\^|~|\\|";
         Pattern p = Pattern.compile(EXPREGEX);
@@ -47,7 +41,6 @@ public class Calculator {
             if (ss.length() > 0) nums.add(ss);
             System.out.println(nums.get(nums.size() - 1));
         }
-
         //初始化exps栈
         String NUMREGEX = "\\d*";
         p = Pattern.compile(NUMREGEX);
@@ -65,16 +58,12 @@ public class Calculator {
     }
 
     /**
-     * 待处理运算符正、负；
-     * 仅仅处理运算类型为int和float的
-     *
-     * @param inputs
-     * @param type
-     * @return
+     * 计算表达式，返回结果
      */
     public static String calAns(String inputs, String type, boolean isPos) {
         preProcess(inputs);
         String temp = "";
+        label:
         while (exps.size() > 0) {
             String exp = exps.get(exps.size() - 1);
             String num1 = nums.get(nums.size() - 1);
@@ -103,182 +92,194 @@ public class Calculator {
                 }
             }
 
-            if (exp.equals("+")) {
-                if (type.equals("INTEGER")) {
-                    try {
-                        temp = Integer.toString(a + b);
-                    } catch (Exception e) {
-                        temp = "overflow";
-                        return temp;
+            switch (exp) {
+                case "+" -> {
+                    if (type.equals("INTEGER")) {
+                        try {
+                            temp = Integer.toString(a + b);
+                        } catch (Exception e) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                        if (checkOverFlow(temp, isPos)) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                    } else if (type.equals("FLOATING_PT")) {
+                        temp = Float.toString(c + d);
                     }
-                    if (checkOverFlow(temp, isPos)) {
-                        temp = "overflow";
-                        return temp;
-                    }
-                } else if (type.equals("FLOATING_PT")) {
-                    temp = Float.toString(c + d);
                 }
-            } else if (exp.equals("-")) {
-                if (type.equals("INTEGER")) {
-                    try {
-                        temp = Integer.toString(a - b);
-                    } catch (Exception e) {
-                        temp = "overflow";
-                        return temp;
+                case "-" -> {
+                    if (type.equals("INTEGER")) {
+                        try {
+                            temp = Integer.toString(a - b);
+                        } catch (Exception e) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                        if (checkOverFlow(temp, isPos)) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                    } else if (type.equals("FLOATING_PT")) {
+                        temp = Float.toString(c - d);
                     }
-                    if (checkOverFlow(temp, isPos)) {
-                        temp = "overflow";
-                        return temp;
-                    }
-                } else if (type.equals("FLOATING_PT")) {
-                    temp = Float.toString(c - d);
                 }
-            } else if (exp.equals("*")) {
-                if (type.equals("INTEGER")) {
-                    try {
-                        temp = Integer.toString(a * b);
-                    } catch (Exception e) {
-                        temp = "overflow";
-                        return temp;
+                case "*" -> {
+                    if (type.equals("INTEGER")) {
+                        try {
+                            temp = Integer.toString(a * b);
+                        } catch (Exception e) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                        if (checkOverFlow(temp, isPos)) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                    } else if (type.equals("FLOATING_PT")) {
+                        temp = Float.toString(c * d);
                     }
-                    if (checkOverFlow(temp, isPos)) {
-                        temp = "overflow";
-                        return temp;
-                    }
-                } else if (type.equals("FLOATING_PT")) {
-                    temp = Float.toString(c * d);
                 }
-            } else if (exp.equals("/")) {
-                if (type.equals("INTEGER")) {
-                    try {
-                        temp = Integer.toString(a / b);
-                    } catch (Exception e) {
-                        temp = "overflow";
-                        return temp;
+                case "/" -> {
+                    if (type.equals("INTEGER")) {
+                        try {
+                            temp = Integer.toString(a / b);
+                        } catch (Exception e) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                        if (checkOverFlow(temp, isPos)) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                    } else {
+                        temp = Float.toString(c / d);
                     }
-                    if (checkOverFlow(temp, isPos)) {
-                        temp = "overflow";
-                        return temp;
-                    }
-                } else {
-                    temp = Float.toString(c / d);
                 }
-            } else if (exp.equals("<<")) {
-                if (type.equals("INTEGER")) {
-                    try {
-                        temp = Integer.toString(a << b);
-                    } catch (Exception e) {
-                        temp = "overflow";
-                        return temp;
+                case "<<" -> {
+                    if (type.equals("INTEGER")) {
+                        try {
+                            temp = Integer.toString(a << b);
+                        } catch (Exception e) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                        if (checkOverFlow(temp, isPos)) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                    } else {
+                        //表示本来应该是int类型
+                        temp = "TypeError";
+                        break label;
                     }
-                    if (checkOverFlow(temp, isPos)) {
-                        temp = "overflow";
-                        return temp;
-                    }
-                } else {
-                    //表示本来应该是int类型
-                    temp = "TypeError";
-                    break;
                 }
-            } else if (exp.equals(">>")) {
-                if (type.equals("INTEGER")) {
-                    try {
-                        temp = Integer.toString(a >> b);
-                    } catch (Exception e) {
-                        temp = "overflow";
-                        return temp;
-                    }
-                    if (checkOverFlow(temp, isPos)) {
-                        temp = "overflow";
-                        return temp;
-                    }
+                case ">>" -> {
+                    if (type.equals("INTEGER")) {
+                        try {
+                            temp = Integer.toString(a >> b);
+                        } catch (Exception e) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                        if (checkOverFlow(temp, isPos)) {
+                            temp = "overflow";
+                            return temp;
+                        }
 
-                } else {
-                    //表示本来应该是int类型
-                    temp = "TypeError";
-                    break;
+                    } else {
+                        //表示本来应该是int类型
+                        temp = "TypeError";
+                        break label;
+                    }
                 }
-            } else if (exp.equals("|")) {
-                if (type.equals("INTEGER")) {
-                    try {
-                        temp = Integer.toString(a | b);
-                    } catch (Exception e) {
-                        temp = "overflow";
-                        return temp;
+                case "|" -> {
+                    if (type.equals("INTEGER")) {
+                        try {
+                            temp = Integer.toString(a | b);
+                        } catch (Exception e) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                        if (checkOverFlow(temp, isPos)) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                    } else {
+                        temp = "TypeError";
+                        break label;
                     }
-                    if (checkOverFlow(temp, isPos)) {
-                        temp = "overflow";
-                        return temp;
-                    }
-                } else {
-                    temp = "TypeError";
-                    break;
                 }
-            } else if (exp.equals("&")) {
-                if (type.equals("INTEGER")) {
-                    try {
-                        temp = Integer.toString(a & b);
-                    } catch (Exception e) {
-                        temp = "overflow";
-                        return temp;
+                case "&" -> {
+                    if (type.equals("INTEGER")) {
+                        try {
+                            temp = Integer.toString(a & b);
+                        } catch (Exception e) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                        if (checkOverFlow(temp, isPos)) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                    } else {
+                        temp = "TypeError";
+                        break label;
                     }
-                    if (checkOverFlow(temp, isPos)) {
-                        temp = "overflow";
-                        return temp;
-                    }
-                } else {
-                    temp = "TypeError";
-                    break;
                 }
-            } else if (exp.equals("^")) {
-                if (type.equals("INTEGER")) {
-                    try {
-                        temp = Integer.toString(a ^ b);
-                    } catch (Exception e) {
-                        temp = "overflow";
-                        return temp;
+                case "^" -> {
+                    if (type.equals("INTEGER")) {
+                        try {
+                            temp = Integer.toString(a ^ b);
+                        } catch (Exception e) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                        if (checkOverFlow(temp, isPos)) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                    } else {
+                        temp = "TypeError";
+                        break label;
                     }
-                    if (checkOverFlow(temp, isPos)) {
-                        temp = "overflow";
-                        return temp;
-                    }
-                } else {
-                    temp = "TypeError";
-                    break;
                 }
-            } else if (exp.equals("%")) {
-                if (type.equals("INTEGER")) {
-                    try {
-                        temp = Integer.toString(a % b);
-                    } catch (Exception e) {
-                        temp = "overflow";
-                        return temp;
+                case "%" -> {
+                    if (type.equals("INTEGER")) {
+                        try {
+                            temp = Integer.toString(a % b);
+                        } catch (Exception e) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                        if (checkOverFlow(temp, isPos)) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                    } else {
+                        //表示本来应该是int类型
+                        temp = "TypeError";
+                        break label;
                     }
-                    if (checkOverFlow(temp, isPos)) {
-                        temp = "overflow";
-                        return temp;
-                    }
-                } else {
-                    //表示本来应该是int类型
-                    temp = "TypeError";
-                    break;
                 }
-            } else if (exp.equals("~")) {
-                if (type.equals("INTEGER")) {
-                    try {
-                        temp = Integer.toString(~b);
-                    } catch (Exception e) {
-                        temp = "overflow";
-                        return temp;
+                case "~" -> {
+                    if (type.equals("INTEGER")) {
+                        try {
+                            temp = Integer.toString(~b);
+                        } catch (Exception e) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                        if (checkOverFlow(temp, isPos)) {
+                            temp = "overflow";
+                            return temp;
+                        }
+                    } else {
+                        //表示本来应该是int类型
+                        temp = "TypeError";
+                        break label;
                     }
-                    if (checkOverFlow(temp, isPos)) {
-                        temp = "overflow";
-                        return temp;
-                    }
-                } else {
-                    //表示本来应该是int类型
-                    temp = "TypeError";
-                    break;
                 }
             }
 

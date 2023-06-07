@@ -52,7 +52,7 @@ public class CodeCreatorMain {
     public static void catchAllMsg() throws IOException {
         //语义分析
         SemanticMain.preCheck();
-        stable = SemanticMain.mc.st;
+        stable = SemanticMain.semanticCheck.st;
         equalType = new HashMap<>();
         equalType.put("int16", "short");
         equalType.put("int32", "long");
