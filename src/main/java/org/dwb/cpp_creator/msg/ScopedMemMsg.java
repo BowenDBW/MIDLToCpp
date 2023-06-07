@@ -14,33 +14,33 @@ public class ScopedMemMsg {
 
     }
 
-    public ScopedMemMsg(String name, String type,ArrayList<MemMsg> members) {
+    public ScopedMemMsg(String name, String type, ArrayList<MemMsg> members) {
         this.name = name;
         this.type = type;
         this.members = members;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setMembers(ArrayList<MemMsg> members) {
-        this.members = members;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getType() {
         return type;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public ArrayList<MemMsg> getMembers() {
         return members;
+    }
+
+    public void setMembers(ArrayList<MemMsg> members) {
+        this.members = members;
     }
 }

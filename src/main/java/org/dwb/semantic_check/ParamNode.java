@@ -12,9 +12,8 @@ public class ParamNode {
     private String val;
     private ParamNode next;
 
-    public ParamNode()
-    {
-        this.name =null;
+    public ParamNode() {
+        this.name = null;
         this.type = null;
         this.moduleName = null;
         this.structName = null;
@@ -32,53 +31,53 @@ public class ParamNode {
     }
 
     @Override
-    public String toString(){
-        return "Module:"+this.moduleName+" @ "+"Struct:"+ this.structName+" @ "+"Type:"+ this.type
-                +" @ "+ "Name:"+this.name+" @ "+ "Val:"+this.val;
+    public String toString() {
+        return "Module:" + this.moduleName + " @ " + "Struct:" + this.structName + " @ " + "Type:" + this.type
+                + " @ " + "Name:" + this.name + " @ " + "Val:" + this.val;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getType() {
         return type;
-    }
-
-    public String getVal() {
-        return val;
-    }
-
-    public String getModuleName() {
-        return moduleName;
-    }
-
-    public String getStructName() {
-        return structName;
-    }
-
-    public ParamNode getNext() {
-        return next;
     }
 
     public void setType(String type) {
         this.type = type;
     }
 
+    public String getVal() {
+        return val;
+    }
+
+    public void setVal(String val) {
+        this.val = val;
+    }
+
+    public String getModuleName() {
+        return moduleName;
+    }
+
     public void setModuleName(String moduleNAme) {
         this.moduleName = moduleNAme;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getStructName() {
+        return structName;
     }
 
     public void setStructName(String structName) {
         this.structName = structName;
     }
 
-    public void setVal(String val) {
-        this.val = val;
+    public ParamNode getNext() {
+        return next;
     }
 
     public void setNext(ParamNode next) {

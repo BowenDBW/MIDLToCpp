@@ -7,13 +7,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 /**
- *  AstTranslator 进行抽象语法树的格式化输出
- * 参考：AST的设计PPT
+ * AstTranslator 提取语法树结构信息
  */
 public class AstTranslator extends MidlGrammarBaseVisitor<String> {
 
     //存储抽象语法树
     public String astParseTree = "";
+
     /**
      * specification -> definition { definition }
      */
@@ -43,9 +43,9 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
     @Override
     public String visitModule(MidlGrammarParser.@NotNull ModuleContext ctx) {
         astParseTree += "module( ";
-        astParseTree += "ID：" + ctx.getChild(1).getText()+" ";
+        astParseTree += "ID：" + ctx.getChild(1).getText() + " ";
         //不visit两边的大括号了
-        for(int i = 3;i < ctx.getChildCount()-1;i++) {
+        for (int i = 3; i < ctx.getChildCount() - 1; i++) {
             visit(ctx.getChild(i));
         }
         astParseTree += " ) ";
@@ -63,9 +63,9 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
         }
         //"struct" ID
         else {
-            astParseTree +="struct( ";
-            astParseTree +="ID："+ctx.ID().getText()+" ";
-            astParseTree +=" ) ";
+            astParseTree += "struct( ";
+            astParseTree += "ID：" + ctx.ID().getText() + " ";
+            astParseTree += " ) ";
         }
         return null;
     }
@@ -75,10 +75,10 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
      */
     @Override
     public String visitStruct_type(MidlGrammarParser.@NotNull Struct_typeContext ctx) {
-        astParseTree +="struct( ";
-        astParseTree +="ID："+ctx.getChild(1).getText()+" ";
+        astParseTree += "struct( ";
+        astParseTree += "ID：" + ctx.getChild(1).getText() + " ";
         visit(ctx.getChild(3));
-        astParseTree +=" ) ";
+        astParseTree += " ) ";
         return null;
     }
 
@@ -90,13 +90,12 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
         int n = ctx.getChildCount();
         if (n == 0) {
             return null;
-        }
-        else {
+        } else {
             for (int i = 0; i < n / 3; i++) {
                 astParseTree += "member( ";
                 visit(ctx.getChild(3 * i));
                 visit(ctx.getChild(3 * i + 1));
-                astParseTree +=" ) ";
+                astParseTree += " ) ";
             }
         }
         return null;
@@ -118,14 +117,13 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
     public String visitScoped_name(MidlGrammarParser.@NotNull Scoped_nameContext ctx) {
         astParseTree += "namespace( ";
         int i;
-        if(Objects.equals(ctx.getChild(0).getText(), "::")){
+        if (Objects.equals(ctx.getChild(0).getText(), "::")) {
             i = 1;
-        }
-        else{
+        } else {
             i = 0;
         }
         for (; i < ctx.getChildCount(); i += 2) {
-            astParseTree += ctx.getChild(i).getText()+" ";
+            astParseTree += ctx.getChild(i).getText() + " ";
         }
         astParseTree += " ) ";
         return null;
@@ -138,9 +136,8 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
     public String visitBase_type_spec(MidlGrammarParser.@NotNull Base_type_specContext ctx) {
         //终结符
         if (ctx.getChild(0).getChildCount() == 0) {
-            astParseTree += ctx.getChild(0).getText()+" ";
-        }
-        else {
+            astParseTree += ctx.getChild(0).getText() + " ";
+        } else {
             visit(ctx.getChild(0));
         }
         return null;
@@ -152,7 +149,7 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
     @Override
     public String visitFloating_pt_type(MidlGrammarParser.@NotNull Floating_pt_typeContext ctx) {
 
-        astParseTree += ctx.getChild(0).getText()+" ";
+        astParseTree += ctx.getChild(0).getText() + " ";
         return null;
     }
 
@@ -175,21 +172,21 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
     @Override
     public String visitSigned_int(MidlGrammarParser.@NotNull Signed_intContext ctx) {
 
-        astParseTree += ctx.getChild(0).getText()+" ";
+        astParseTree += ctx.getChild(0).getText() + " ";
 
         return null;
     }
 
     /**
      * unsigned_int -> (“unsigned short”| “uint16”)
-     *    | (“unsigned long”| “uint32”)
-     *    | (“unsigned long long” | “uint64”)
-     *    | “uint8”
+     * | (“unsigned long”| “uint32”)
+     * | (“unsigned long long” | “uint64”)
+     * | “uint8”
      */
     @Override
     public String visitUnsigned_int(MidlGrammarParser.@NotNull Unsigned_intContext ctx) {
 
-        astParseTree += ctx.getChild(0).getText()+" ";
+        astParseTree += ctx.getChild(0).getText() + " ";
         return null;
     }
 
@@ -199,10 +196,9 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
     @Override
     public String visitDeclarators(MidlGrammarParser.@NotNull DeclaratorsContext ctx) {
         int n = ctx.getChildCount();
-        for(int i = 0;i < n;i++)
-        {
+        for (int i = 0; i < n; i++) {
             //除去逗号
-            if(ctx.getChild(i).getChildCount()!=0)
+            if (ctx.getChild(i).getChildCount() != 0)
                 visit(ctx.getChild(i));
         }
         return null;
@@ -225,11 +221,10 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
 
         if (ctx.getChildCount() != 1) {
             astParseTree += "=( ";
-            astParseTree += "ID：" + ctx.getChild(0).getText()+" ";
+            astParseTree += "ID：" + ctx.getChild(0).getText() + " ";
             visit(ctx.or_expr());
             astParseTree += " ) ";
-        }
-        else astParseTree += "ID：" + ctx.getChild(0).getText()+" ";
+        } else astParseTree += "ID：" + ctx.getChild(0).getText() + " ";
         return null;
     }
 
@@ -239,7 +234,7 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
     @Override
     public String visitArray_declarator(MidlGrammarParser.@NotNull Array_declaratorContext ctx) {
         astParseTree += "array( ";
-        astParseTree += "ID:"+ctx.getChild(0).getText() + " ";
+        astParseTree += "ID:" + ctx.getChild(0).getText() + " ";
 
         visit(ctx.getChild(2));
 
@@ -257,8 +252,8 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
     public String visitExp_list(MidlGrammarParser.@NotNull Exp_listContext ctx) {
         astParseTree += "arrayValues( ";
         int n = ctx.getChildCount();
-        for (int i = 0; i < n; i ++) {
-            if(ctx.getChild(i).getChildCount()>0)
+        for (int i = 0; i < n; i++) {
+            if (ctx.getChild(i).getChildCount() > 0)
                 visit(ctx.getChild(i));
         }
         astParseTree += " ) ";
@@ -271,7 +266,7 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
     @Override
     public String visitOr_expr(MidlGrammarParser.@NotNull Or_exprContext ctx) {
         int n = ctx.getChildCount();
-        if(n > 1) {
+        if (n > 1) {
             for (int i = 1; i < n; i += 2) {
                 astParseTree += "|( ";
                 visit(ctx.getChild(i - 1));
@@ -281,8 +276,7 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
             for (int i = 1; i < n; i += 2) {
                 astParseTree += " ) ";
             }
-        }
-        else visit(ctx.getChild(0));
+        } else visit(ctx.getChild(0));
         return null;
     }
 
@@ -292,7 +286,7 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
     @Override
     public String visitXor_expr(MidlGrammarParser.@NotNull Xor_exprContext ctx) {
         int n = ctx.getChildCount();
-        if(n > 1) {
+        if (n > 1) {
             for (int i = 1; i < n; i += 2) {
                 astParseTree += "^( ";
                 visit(ctx.getChild(i - 1));
@@ -302,8 +296,7 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
             for (int i = 1; i < n; i += 2) {
                 astParseTree += " ) ";
             }
-        }
-        else visit(ctx.getChild(0));
+        } else visit(ctx.getChild(0));
         return null;
     }
 
@@ -313,7 +306,7 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
     @Override
     public String visitAnd_expr(MidlGrammarParser.@NotNull And_exprContext ctx) {
         int n = ctx.getChildCount();
-        if(n > 1) {
+        if (n > 1) {
             for (int i = 1; i < n; i += 2) {
                 astParseTree += "&( ";
                 visit(ctx.getChild(i - 1));
@@ -323,8 +316,7 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
             for (int i = 1; i < n; i += 2) {
                 astParseTree += " ) ";
             }
-        }
-        else visit(ctx.getChild(0));
+        } else visit(ctx.getChild(0));
         return null;
     }
 
@@ -334,10 +326,10 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
     @Override
     public String visitShift_expr(MidlGrammarParser.@NotNull Shift_exprContext ctx) {
         int n = ctx.getChildCount();
-        if(n > 1) {
+        if (n > 1) {
             for (int i = 1; i < n; i += 2) {
                 //>>或<<
-                astParseTree += ctx.getChild(i).getText()+"( ";
+                astParseTree += ctx.getChild(i).getText() + "( ";
                 visit(ctx.getChild(i - 1));
                 if (i == n - 2)
                     visit(ctx.getChild(i + 1));
@@ -345,8 +337,7 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
             for (int i = 1; i < n; i += 2) {
                 astParseTree += " ) ";
             }
-        }
-        else visit(ctx.getChild(0));
+        } else visit(ctx.getChild(0));
         return null;
     }
 
@@ -356,10 +347,10 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
     @Override
     public String visitAdd_expr(MidlGrammarParser.@NotNull Add_exprContext ctx) {
         int n = ctx.getChildCount();
-        if(n > 1) {
+        if (n > 1) {
             for (int i = 1; i < n; i += 2) {
                 //>>或<<
-                astParseTree += ctx.getChild(i).getText()+"( ";
+                astParseTree += ctx.getChild(i).getText() + "( ";
                 visit(ctx.getChild(i - 1));
                 if (i == n - 2)
                     visit(ctx.getChild(i + 1));
@@ -367,8 +358,7 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
             for (int i = 1; i < n; i += 2) {
                 astParseTree += " ) ";
             }
-        }
-        else visit(ctx.getChild(0));
+        } else visit(ctx.getChild(0));
         return null;
     }
 
@@ -378,10 +368,10 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
     @Override
     public String visitMult_expr(MidlGrammarParser.@NotNull Mult_exprContext ctx) {
         int n = ctx.getChildCount();
-        if(n > 1) {
+        if (n > 1) {
             for (int i = 1; i < n; i += 2) {
                 //>>或<<
-                astParseTree += ctx.getChild(i).getText()+"( ";
+                astParseTree += ctx.getChild(i).getText() + "( ";
                 visit(ctx.getChild(i - 1));
                 if (i == n - 2)
                     visit(ctx.getChild(i + 1));
@@ -389,8 +379,7 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
             for (int i = 1; i < n; i += 2) {
                 astParseTree += " ) ";
             }
-        }
-        else visit(ctx.getChild(0));
+        } else visit(ctx.getChild(0));
         return null;
     }
 
@@ -401,7 +390,7 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
     public String visitUnary_expr(MidlGrammarParser.@NotNull Unary_exprContext ctx) {
 
         if (ctx.getChildCount() != 1) {
-            astParseTree += ctx.getChild(0).getText()+"( ";
+            astParseTree += ctx.getChild(0).getText() + "( ";
         }
         visit(ctx.literal());
         if (ctx.getChildCount() != 1) {
@@ -415,7 +404,7 @@ public class AstTranslator extends MidlGrammarBaseVisitor<String> {
      */
     @Override
     public String visitLiteral(MidlGrammarParser.@NotNull LiteralContext ctx) {
-        astParseTree += ctx.getChild(0)+" ";
+        astParseTree += ctx.getChild(0) + " ";
         return null;
     }
 }

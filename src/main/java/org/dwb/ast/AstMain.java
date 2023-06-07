@@ -1,7 +1,9 @@
 package org.dwb.ast;
 
-import org.antlr.v4.runtime.tree.*;
-import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.dwb.antlr.MidlGrammarLexer;
 import org.dwb.antlr.MidlGrammarParser;
 
@@ -15,13 +17,13 @@ import java.io.*;
 public class AstMain {
     private static final String inputFileName = "multi_midl.txt";
     private static final String outputFileName = "middle.txt";
+
     public static void main(String[] args) throws Exception {
         File inputFile = new File(inputFileName);
-        if(inputFile.exists() && inputFile.isFile()) {
+        if (inputFile.exists() && inputFile.isFile()) {
             System.out.println("Workplace: " + System.getProperties().getProperty("user.dir"));
             System.out.println("Successfully read " + inputFileName + "\n");
-        }
-        else {
+        } else {
             System.out.println("Invalid input file!");
             return;
         }
@@ -30,7 +32,7 @@ public class AstMain {
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputFile));
 
         String line;
-        while((line = bufferedReader.readLine()) != null) {
+        while ((line = bufferedReader.readLine()) != null) {
 
             CharStream input = CharStreams.fromString(line);
             MidlGrammarLexer lexer = new MidlGrammarLexer(input);

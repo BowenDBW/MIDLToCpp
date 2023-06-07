@@ -20,39 +20,39 @@ public class StructMsg {
     }
 
     public StructMsg() {
-        scopeMembers=null;
-        members=null;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setMembers(ArrayList<MemMsg> members) {
-        this.members = members;
-    }
-
-    public void setScopeMembers(ArrayList<ScopedMemMsg> scopeMembers) {
-        this.scopeMembers = scopeMembers;
-    }
-
-    public void setHasScoped(boolean hasScoped) {
-        this.hasScoped = hasScoped;
+        scopeMembers = null;
+        members = null;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public ArrayList<MemMsg> getMembers() {
         return members;
+    }
+
+    public void setMembers(ArrayList<MemMsg> members) {
+        this.members = members;
     }
 
     public ArrayList<ScopedMemMsg> getScopeMembers() {
         return scopeMembers;
     }
 
+    public void setScopeMembers(ArrayList<ScopedMemMsg> scopeMembers) {
+        this.scopeMembers = scopeMembers;
+    }
+
     public boolean isHasScoped() {
         return hasScoped;
+    }
+
+    public void setHasScoped(boolean hasScoped) {
+        this.hasScoped = hasScoped;
     }
 }

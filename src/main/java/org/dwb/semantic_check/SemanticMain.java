@@ -7,7 +7,9 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.dwb.antlr.MidlGrammarLexer;
 import org.dwb.antlr.MidlGrammarParser;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * 整合前端
@@ -17,13 +19,14 @@ public class SemanticMain {
     private static final String inputFileName = "midl.txt";
 
     public static SemanticCheck mc;
+
     public static void preCheck() throws IOException {
-        BufferedReader bufferedReader = new BufferedReader( new FileReader(inputFileName));
-        StringBuilder codes= new StringBuilder();
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(inputFileName));
+        StringBuilder codes = new StringBuilder();
         String line;
         int cnt = 1;
-        while((line = bufferedReader.readLine()) != null) {
-            System.out.printf("[%03d]: %s",cnt,line);
+        while ((line = bufferedReader.readLine()) != null) {
+            System.out.printf("[%03d]: %s", cnt, line);
             System.out.println();
             codes.append(line).append("\n");
             cnt++;

@@ -1,4 +1,5 @@
 package org.dwb.semantic_check;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -8,46 +9,43 @@ import java.util.ArrayList;
  */
 public class ParamList {
     public ParamNode head;
-    public ParamList()
-    {
+
+    public ParamList() {
         head = new ParamNode();
     }
 
     /**
      * 头插
      */
-    public void insertNode(@NotNull ParamNode sn)
-    {
+    public void insertNode(@NotNull ParamNode sn) {
         sn.setNext(head.getNext());
         head.setNext(sn);
     }
 
-    public ParamNode getHead()
-    {
+    public ParamNode getHead() {
         return head;
     }
 
     /**
      * tofind中非null的值进行匹配
      */
-    public ParamNode findNode(ParamNode toFind)
-    {
+    public ParamNode findNode(ParamNode toFind) {
         ParamNode tp = head;
-        while((tp=tp.getNext())!=null){
+        while ((tp = tp.getNext()) != null) {
             //tp = tp.getNext();
-            if(toFind.getName()!=null && !(toFind.getName().equals(tp.getName()))){
+            if (toFind.getName() != null && !(toFind.getName().equals(tp.getName()))) {
                 continue;
             }
-            if(toFind.getModuleName()!=null && !(toFind.getModuleName().equals(tp.getModuleName()))){
+            if (toFind.getModuleName() != null && !(toFind.getModuleName().equals(tp.getModuleName()))) {
                 continue;
             }
-            if(toFind.getStructName()!=null && !(toFind.getStructName().equals(tp.getStructName()))){
+            if (toFind.getStructName() != null && !(toFind.getStructName().equals(tp.getStructName()))) {
                 continue;
             }
-            if(toFind.getType()!=null && !(toFind.getType().equals(tp.getType()))){
+            if (toFind.getType() != null && !(toFind.getType().equals(tp.getType()))) {
                 continue;
             }
-            if(toFind.getVal()!=null && !(toFind.getVal().equals(tp.getVal()))){
+            if (toFind.getVal() != null && !(toFind.getVal().equals(tp.getVal()))) {
                 continue;
             }
             break;
@@ -58,26 +56,25 @@ public class ParamList {
     /**
      * tofind中非null的值进行匹配所有的
      */
-    public ArrayList<ParamNode> findNodes(ParamNode toFind)
-    {
+    public ArrayList<ParamNode> findNodes(ParamNode toFind) {
         ArrayList<ParamNode> ans = new ArrayList<ParamNode>();
 
         ParamNode tp = head;
-        while((tp=tp.getNext())!=null){
+        while ((tp = tp.getNext()) != null) {
             //tp = tp.getNext();
-            if(toFind.getName()!=null && !(toFind.getName().equals(tp.getName()))){
+            if (toFind.getName() != null && !(toFind.getName().equals(tp.getName()))) {
                 continue;
             }
-            if(toFind.getModuleName()!=null && !(toFind.getModuleName().equals(tp.getModuleName()))){
+            if (toFind.getModuleName() != null && !(toFind.getModuleName().equals(tp.getModuleName()))) {
                 continue;
             }
-            if(toFind.getStructName()!=null && !(toFind.getStructName().equals(tp.getStructName()))){
+            if (toFind.getStructName() != null && !(toFind.getStructName().equals(tp.getStructName()))) {
                 continue;
             }
-            if(toFind.getType()!=null && !(toFind.getType().equals(tp.getType()))){
+            if (toFind.getType() != null && !(toFind.getType().equals(tp.getType()))) {
                 continue;
             }
-            if(toFind.getVal()!=null && !(toFind.getVal().equals(tp.getVal()))){
+            if (toFind.getVal() != null && !(toFind.getVal().equals(tp.getVal()))) {
                 continue;
             }
             ans.add(tp);
@@ -87,12 +84,11 @@ public class ParamList {
 
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         ParamNode tp = head.getNext();
-        String nodes="";
-        while(tp!=null){
-            nodes += tp.toString()+"\n";
+        String nodes = "";
+        while (tp != null) {
+            nodes += tp.toString() + "\n";
             tp = tp.getNext();
         }
         return nodes;

@@ -11,9 +11,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
 
+/**
+ * AstToGraphviz 将结构化的语法信息转为结点信息和边信息并交给 graphviz 输出 png 图像
+ */
 public class AstToGraphviz {
     /**
      * 去除 String[] 数组中的空字符串("")
+     *
      * @param arr 源数组
      * @return 操作后的新数组 String[]
      */
@@ -21,32 +25,32 @@ public class AstToGraphviz {
         return Arrays.stream(arr).filter(s -> !"".equals(s)).toArray(String[]::new);
     }
 
-    private @NotNull ArrayList<AstNode> formTree(@NotNull String line){
+    private @NotNull ArrayList<AstNode> formTree(@NotNull String line) {
         String[] blocks = line.split(" ");
         blocks = removeArraysEmpty(blocks);
         int layer = 1;
         int count = 0;
         ArrayList<AstNode> nodes = new ArrayList<>();
         Stack<AstNode> parents = new Stack<>();
-        for(String word : blocks){
-            if(word.equals(")")){
+        for (String word : blocks) {
+            if (word.equals(")")) {
                 layer--;
                 parents.pop();
                 continue;
-            }else if(word.endsWith("(")){
-                if(layer == 1){
+            } else if (word.endsWith("(")) {
+                if (layer == 1) {
                     var newNode = AstNode.builder()
                             .nodeId(count)
                             .nodeLayer(layer)
-                            .nodeName(word.substring(0,word.length()-1))
+                            .nodeName(word.substring(0, word.length() - 1))
                             .build();
                     nodes.add(newNode);
                     parents.push(newNode);
-                }else {
+                } else {
                     var newNode = AstNode.builder()
                             .nodeId(count)
                             .nodeLayer(layer)
-                            .nodeName(word.substring(0,word.length()-1))
+                            .nodeName(word.substring(0, word.length() - 1))
                             .parentId(parents.peek().nodeId)
                             .parentName(parents.peek().nodeName)
                             .build();
@@ -54,7 +58,7 @@ public class AstToGraphviz {
                     parents.push(newNode);
                 }
                 layer++;
-            }else {
+            } else {
                 var newNode = AstNode.builder()
                         .nodeId(count)
                         .nodeLayer(layer)
@@ -71,11 +75,11 @@ public class AstToGraphviz {
 
     private void genDotFiles(String outputPath, @NotNull ArrayList<String> srcTxt) throws IOException {
         int count = 1;
-        for(String line : srcTxt){
+        for (String line : srcTxt) {
             int maxDepth = -1;
             ArrayList<AstNode> nodes = formTree(line);
-            for (AstNode node: nodes){
-                if(node.nodeLayer > maxDepth){
+            for (AstNode node : nodes) {
+                if (node.nodeLayer > maxDepth) {
                     maxDepth = node.nodeLayer;
                 }
             }
@@ -84,10 +88,10 @@ public class AstToGraphviz {
                     new BufferedWriter(new FileWriter(filePath));
             bufferedWriter.write("graph{");
             bufferedWriter.newLine();
-            for (int i = 0; i < maxDepth; i++){
+            for (int i = 0; i < maxDepth; i++) {
                 bufferedWriter.write("    { rank=same");
-                for (AstNode node: nodes){
-                    if(node.nodeLayer - 1 == i){
+                for (AstNode node : nodes) {
+                    if (node.nodeLayer - 1 == i) {
                         bufferedWriter.write("; \"" + node.nodeName + "@" + node.nodeId + "\"");
                     }
                 }
@@ -97,8 +101,8 @@ public class AstToGraphviz {
 
             bufferedWriter.newLine();
 
-            for (AstNode node: nodes){
-                if(node.nodeLayer == 1){
+            for (AstNode node : nodes) {
+                if (node.nodeLayer == 1) {
                     continue;
                 }
                 bufferedWriter.write("    \"" + node.nodeName + "@" + node.nodeId
@@ -121,17 +125,17 @@ public class AstToGraphviz {
         return names;
     }
 
-    private void genGraphs(String outputPath, String dotDir){
+    private void genGraphs(String outputPath, String dotDir) {
         ArrayList<String> files = getAllFiles(dotDir);
-        for(String file : files){
+        for (String file : files) {
             System.out.println(file);
             try (InputStream dot = new FileInputStream(file)) {
                 MutableGraph g = new Parser().read(dot);
                 String serial = file.split("SyntaxOut")[1].split("\\.")[0];
                 Graphviz.fromGraph(g).width(1200).render(Format.PNG)
-                        .toFile(new File(outputPath  + "/SyntaxOut"
+                        .toFile(new File(outputPath + "/SyntaxOut"
                                 + serial + ".png"));
-            }catch (IOException e){
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -144,15 +148,15 @@ public class AstToGraphviz {
         BufferedReader bufferedReader =
                 new BufferedReader(new FileReader(inputPath));
         String line;
-        while((line = bufferedReader.readLine()) != null){
+        while ((line = bufferedReader.readLine()) != null) {
             txt.add(line);
         }
         bufferedReader.close();
-        genDotFiles(outputPath + "/ast_dots",txt);
-        try{
+        genDotFiles(outputPath + "/ast_dots", txt);
+        try {
             File file = new File(inputPath);
             file.delete();
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         genGraphs(outputPath + "/ast_graphs", outputPath + "/ast_dots");
