@@ -1,7 +1,6 @@
 package org.dwb.semantic_check;
 
 import org.jetbrains.annotations.NotNull;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,9 +20,6 @@ public class ParamTable {
 
     /**
      * 输入字符串,输出哈希值
-     *
-     * @param key
-     * @return hashcode
      */
     public static int hash(@NotNull String key) {
         int hashCode = 0;

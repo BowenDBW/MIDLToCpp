@@ -27,7 +27,7 @@ public class ParamList {
     }
 
     /**
-     * tofind中非null的值进行匹配
+     * to find中非null的值进行匹配
      */
     public ParamNode findNode(ParamNode toFind) {
         ParamNode tp = head;
@@ -54,7 +54,7 @@ public class ParamList {
     }
 
     /**
-     * tofind中非null的值进行匹配所有的
+     * to find中非null的值进行匹配所有的
      */
     public ArrayList<ParamNode> findNodes(ParamNode toFind) {
         ArrayList<ParamNode> ans = new ArrayList<ParamNode>();
@@ -88,7 +88,7 @@ public class ParamList {
         ParamNode tp = head.getNext();
         String nodes = "";
         while (tp != null) {
-            nodes += tp.toString() + "\n";
+            nodes += tp + "\n";
             tp = tp.getNext();
         }
         return nodes;
